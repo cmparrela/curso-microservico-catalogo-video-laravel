@@ -12,7 +12,9 @@ class Category extends Model
     use UuidTrait;
 
     protected $fillable = ['name', 'description', 'is_active'];
-    protected $dates = ['deleted_at'];
-    protected $casts = ['id' => 'string'];
+    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
+    protected $keyType = 'string';
+
+    public $incrementing = false;
 
 }
