@@ -24,36 +24,30 @@ class CategoryTest extends TestCase
             UuidTrait::class,
         ];
         $usedTraits = array_keys(class_uses(Category::class));
-
         $this->assertEquals($traits, $usedTraits);
     }
 
     public function testFillableAttribute()
     {
         $fillable = ['name', 'description', 'is_active'];
-
-        $this->assertEquals(
-            $fillable,
-            $this->category->getFillable()
-        );
+        $this->assertEquals($fillable, $this->category->getFillable());
     }
 
     public function testDateAttribute()
     {
         $dates = ['deleted_at', 'created_at', 'updated_at'];
-
-        $this->assertEquals(
-            $dates,
-            $this->category->getDates()
-        );
+        $this->assertEquals($dates, $this->category->getDates());
     }
 
     public function testKeyTypeAttribute()
     {
-        $this->assertEquals(
-            'string',
-            $this->category->getKeyType()
-        );
+        $this->assertEquals('string', $this->category->getKeyType());
+    }
+
+    public function testCastsAttribute()
+    {
+        $casts = ['is_active' => 'boolean'];
+        $this->assertEquals($casts, $this->category->getCasts());
     }
 
     public function testIncrementing()

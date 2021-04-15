@@ -1,19 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Tests\Stubs\Controllers;
 
-use App\Models\Genre;
+use App\Http\Controllers\BasicCrudController;
+use Tests\Stubs\Models\CategoryStub;
 
-class GenreController extends BasicCrudController
+class CategoryControllerStubs extends BasicCrudController
 {
     private $rules = [
         'name' => 'required|max:255',
+        'description' => 'nullable',
         'is_active' => 'boolean',
     ];
 
     protected function model()
     {
-        return Genre::class;
+        return CategoryStub::class;
     }
 
     protected function rulesStore()

@@ -25,36 +25,30 @@ class GenreTest extends TestCase
             UuidTrait::class,
         ];
         $usedTraits = array_keys(class_uses(Genre::class));
-
         $this->assertEquals($traits, $usedTraits);
     }
 
     public function testFillableAttribute()
     {
         $fillable = ['name', 'is_active'];
-
-        $this->assertEquals(
-            $fillable,
-            $this->genre->getFillable()
-        );
+        $this->assertEquals($fillable, $this->genre->getFillable());
     }
 
     public function testDateAttribute()
     {
         $dates = ['deleted_at', 'created_at', 'updated_at'];
-
-        $this->assertEquals(
-            $dates,
-            $this->genre->getDates()
-        );
+        $this->assertEquals($dates, $this->genre->getDates());
     }
 
     public function testKeyTypeAttribute()
     {
-        $this->assertEquals(
-            'string',
-            $this->genre->getKeyType()
-        );
+        $this->assertEquals('string', $this->genre->getKeyType());
+    }
+
+    public function testCastsAttribute()
+    {
+        $casts = ['is_active' => 'boolean'];
+        $this->assertEquals($casts, $this->genre->getCasts());
     }
 
     public function testIncrementing()

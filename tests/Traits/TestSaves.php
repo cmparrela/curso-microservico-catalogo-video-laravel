@@ -7,6 +7,10 @@ use Illuminate\Foundation\Testing\TestResponse;
 
 trait TestSaves
 {
+    abstract protected function model();
+    abstract protected function routeStore();
+    abstract protected function routeUpdate();
+
     protected function assertStore(array $sendData, array $testDatabase, array $testJsonData = []): TestResponse
     {
         $response = $this->json('POST', $this->routeStore(), $sendData);
@@ -23,7 +27,7 @@ trait TestSaves
     {
         $response = $this->json('PUT', $this->routeUpdate(), $sendData);
         if ($response->status() !== 200) {
-            throw new Exception("Response status must be 201, given {$response->status()}:\n{$response->content()}");
+            throw new Exception("Response status must be 200, given {$response->status()}:\n{$response->content()}");
         }
         $this->assertInDatabase($response, $testDatabase);
         $this->assertJsonResponseContent($response, $testDatabase, $testJsonData);
