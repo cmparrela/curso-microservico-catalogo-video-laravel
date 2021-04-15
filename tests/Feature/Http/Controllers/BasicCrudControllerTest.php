@@ -31,57 +31,86 @@ class BasicCrudControllerTest extends TestCase
         parent::tearDown();
     }
 
+    private function createCategory()
+    {
+        return CategoryStub::create(['name' => 'test_name', 'description' => 'test_description'])->refresh();
+    }
+
     public function testIndex()
     {
-        $category = CategoryStub::create(['name' => 'test_name', 'description' => 'test_description'])->refresh();
+        $category = $this->createCategory();
         $result = $this->controller->index()->toArray();
         $this->assertEquals([$category->toArray()], $result);
+    }
+
+    private function createMockRequest(array $data)
+    {
+        $request = Mockery::mock(Request::class);
+        $request->shouldReceive('all')->once()->andReturn($data);
+        return $request;
     }
 
     public function testInvalidationDataInStore()
     {
         $this->expectException(ValidationException::class);
-        $request = Mockery::mock(Request::class);
-        $request
-            ->shouldReceive('all')
-            ->once()
-            ->andReturn(['name' => '']);
-
+        $request = $this->createMockRequest(['name' => '']);
         $this->controller->store($request);
     }
 
     public function testStore()
     {
-        $request = Mockery::mock(Request::class);
-        $request
-            ->shouldReceive('all')
-            ->once()
-            ->andReturn(['name' => 'test_name', 'description' => 'test_description']);
-
+        $request = $this->createMockRequest(['name' => 'test_name', 'description' => 'test_description']);
         $obj = $this->controller->store($request);
         $this->assertEquals(CategoryStub::find(1)->toArray(), $obj->toArray());
     }
 
-    public function testIfFindOrFailFetchModel()
+    private function reflectionControllerFindOrFail(int $id)
     {
-        $category = CategoryStub::create(['name' => 'test_name', 'description' => 'test_description'])->refresh();
-
         $reflectionClass = new ReflectionClass(BasicCrudController::class);
         $reflectionMethod = $reflectionClass->getMethod('findOrFail');
         $reflectionMethod->setAccessible(true);
 
-        $result = $reflectionMethod->invokeArgs($this->controller, [$category->id]);
+        return $reflectionMethod->invokeArgs($this->controller, [$id]);
+    }
+
+    public function testIfFindOrFailFetchModel()
+    {
+        $category = $this->createCategory();
+        $result = $this->reflectionControllerFindOrFail($category->id);
         $this->assertInstanceOf(CategoryStub::class, $result);
     }
 
     public function testIfFindOrFailThrowExceptionWhenIdInvalid()
     {
         $this->expectException(ModelNotFoundException::class);
-        $reflectionClass = new ReflectionClass(BasicCrudController::class);
-        $reflectionMethod = $reflectionClass->getMethod('findOrFail');
-        $reflectionMethod->setAccessible(true);
+        $result = $this->reflectionControllerFindOrFail(0);
+    }
 
-        $result = $reflectionMethod->invokeArgs($this->controller, [0]);
+    public function testShow()
+    {
+        $category = $this->createCategory();
+        $result = $this->controller->show($category->id);
+        $this->assertEquals($result->toArray(), $category->toArray());
+    }
+
+    public function testUpdate()
+    {
+        $category = $this->createCategory();
+        $request = $this->createMockRequest(['name' => 'test_name', 'description' => 'test_description']);
+
+        $this->controller->update($request, $category->id);
+        $result = $this->reflectionControllerFindOrFail($category->id);
+
+        $this->assertEquals($category->toArray(), $result->toArray());
+    }
+
+    public function testDestroy()
+    {
+        $category = $this->createCategory();
+        $this->controller->destroy($category->id);
+
+        $this->assertNull(CategoryStub::find($category->id));
+        $this->assertNotNull(CategoryStub::withTrashed()->find($category->id));
     }
 
 }

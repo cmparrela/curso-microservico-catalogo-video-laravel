@@ -2,37 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Http\Controllers\BasicCrudController;
 
-class CategoryController extends Controller
+class CategoryController extends BasicCrudController
 {
-    public function index()
+    private $rules = [
+        'name' => 'required|max:255',
+        'description' => 'nullable',
+        'is_active' => 'boolean',
+    ];
+
+    protected function model()
     {
-        return Category::all();
-    }
-    public function store(CategoryRequest $request)
-    {
-        $category = Category::create($request->all());
-        return $category->refresh();
+        return Category::class;
     }
 
-    public function show(Category $category)
+    protected function rulesStore()
     {
-        return $category;
+        return $this->rules;
     }
 
-    public function update(CategoryRequest $request, Category $category)
+    protected function rulesUpdate()
     {
-        if ($category->update($request->all())) {
-            return $category;
-        }
-    }
-
-    public function destroy(Category $category)
-    {
-        $category->delete();
-        return response()->noContent();
+        return $this->rules;
     }
 }

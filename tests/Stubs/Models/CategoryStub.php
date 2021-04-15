@@ -2,11 +2,14 @@
 namespace Tests\Stubs\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class CategoryStub extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'category_stubs';
     protected $fillable = ['name', 'description'];
 
@@ -16,6 +19,7 @@ class CategoryStub extends Model
             $table->bigIncrements('id');
             $table->string('name');
             $table->text('description')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
