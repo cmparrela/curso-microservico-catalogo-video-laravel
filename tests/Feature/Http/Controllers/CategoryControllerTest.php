@@ -43,16 +43,16 @@ class CategoryControllerTest extends TestCase
     public function testInvalidationData()
     {
         $data = ['name' => ''];
-        $this->assertInvalidationStoreAction($data, 'required');
-        $this->assertInvalidationUpdateAction($data, 'required');
+        $this->assertInvalidationInStoreAction($data, 'required');
+        $this->assertInvalidationInUpdateAction($data, 'required');
 
         $data = ['name' => str_repeat('a', 256)];
-        $this->assertInvalidationStoreAction($data, 'max.string', ['max' => 255]);
-        $this->assertInvalidationUpdateAction($data, 'max.string', ['max' => 255]);
+        $this->assertInvalidationInStoreAction($data, 'max.string', ['max' => 255]);
+        $this->assertInvalidationInUpdateAction($data, 'max.string', ['max' => 255]);
 
         $data = ['is_active' => 'a'];
-        $this->assertInvalidationStoreAction($data, 'boolean');
-        $this->assertInvalidationUpdateAction($data, 'boolean');
+        $this->assertInvalidationInStoreAction($data, 'boolean');
+        $this->assertInvalidationInUpdateAction($data, 'boolean');
 
     }
 

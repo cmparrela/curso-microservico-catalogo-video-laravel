@@ -13,3 +13,4 @@ $exceptCreateAndEdit = [
 Route::resource('categories', 'CategoryController', $exceptCreateAndEdit);
 Route::resource('genres', 'GenreController', $exceptCreateAndEdit);
 Route::resource('cast_members', 'CastMemberController', $exceptCreateAndEdit);
+Route::resource('videos', 'VideoController', $exceptCreateAndEdit);
