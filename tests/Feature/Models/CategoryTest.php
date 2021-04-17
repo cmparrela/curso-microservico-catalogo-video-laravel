@@ -4,7 +4,6 @@ namespace Tests\Feature\Models;
 
 use App\Models\Category;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
 class CategoryTest extends TestCase
@@ -32,14 +31,37 @@ class CategoryTest extends TestCase
     public function testCreate()
     {
         $category = Category::create([
-            'name' => 'teste',
+            'name' => 'test1',
         ]);
         $category->refresh();
 
-        $this->assertEquals('teste', $category->name);
+        $this->assertNotEmpty($category->id);
+        $this->assertEquals(36, strlen($category->id));
+        $this->assertTrue((bool) preg_match('/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i', $category->id));
+
+        $this->assertEquals('test1', $category->name);
         $this->assertNull($category->description);
-        $this->assertTrue((bool) $category->is_active);
-        $this->assertTrue(Uuid::isValid($category->id));
+        $this->assertTrue($category->is_active);
+
+        $category = Category::create([
+            'name' => 'test1', 'description' => null,
+        ]);
+        $this->assertNull($category->description);
+
+        $category = Category::create([
+            'name' => 'test1', 'description' => "test_description",
+        ]);
+        $this->assertEquals('test_description', $category->description);
+
+        $category = Category::create([
+            'name' => 'test1', 'is_active' => false,
+        ]);
+        $this->assertFalse($category->is_active);
+
+        $category = Category::create([
+            'name' => 'test1', 'is_active' => true,
+        ]);
+        $this->assertTrue($category->is_active);
     }
 
     public function testUpdate()
