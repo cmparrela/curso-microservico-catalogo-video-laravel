@@ -1,25 +1,18 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="http://maratona.fullcycle.com.br/public/img/logo-maratona.png"/></a>
-</p>
+## Tecnologias
+- Docker (https://www.docker.com/)
+- PHP 7.3 (https://www.php.net/)
+- Laravel 6 (https://laravel.com/)
+- Nginx (https://www.nginx.com/)
+- MySQL 5.7 (https://www.mysql.com/)
 
 ## Descrição
 
 Microsserviço de catálogo
 
-## Rodar a aplicação
+## Instalação
 
-#### Crie os containers com Docker
-
-```bash
-$ docker-compose up
+```sh
+$ docker-compose up  -d
 ```
 
-#### Accesse no browser
-
-```
-http://localhost:8000
-```
-
-## Apéndice
-
-Nosso aluno [Yuri Koster](https://github.com/yurikoster1) criou outra opção do repositório organizando melhor os arquivos Docker, se quiserem utilizar basta clonar o branch ```more_organized```.
+Por fim basta acessar http://localhost:8000 para ter acesso a aplicação
